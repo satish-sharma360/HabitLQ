@@ -12,3 +12,4 @@ const getLeaderboard = catchAsync(async (req, res, next) => {
         data: users,
     });
 })
+export {getLeaderboard}
