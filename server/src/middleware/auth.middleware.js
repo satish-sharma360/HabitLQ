@@ -1,4 +1,4 @@
-import userModel from "../model/user.model";
+import userModel from "../model/user.model.js";
 import { VerifyToken } from "../service/token.service.js";
 import AppError from "../utils/AppError.js";
 import { catchAsync } from "../utils/catchAsync.js";
@@ -23,3 +23,4 @@ const Protected = catchAsync(async (req , res , next) =>{
 
     next();
 })
+export default Protected
