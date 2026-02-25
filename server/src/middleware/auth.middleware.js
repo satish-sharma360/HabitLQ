@@ -23,4 +23,11 @@ const Protected = catchAsync(async (req , res , next) =>{
 
     next();
 })
+
+export const getAdmin = catchAsync(async(req,res,next)=>{
+    if(req.user.role === 'admin'){
+        next()
+    }
+})
+
 export default Protected
