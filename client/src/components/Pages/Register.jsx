@@ -4,6 +4,7 @@ import Input from "../core/Input";
 import { useContext } from "react";
 import { AuthContext } from "../../context/auth";
 import Button from "../core/Button";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   const { register } = useContext(AuthContext);
@@ -79,10 +80,19 @@ const Register = () => {
             onChange={handleChange}
             placeholder="••••••"
           />
-
-          <Button type="submit" target="">
+          <Button type="submit" target="" className="w-full" active={true}>
             Create Account
           </Button>
+          <div className="mt-6 text-center text-sm text-gray-400">
+            You have already an account?{" "}
+            <Link
+              to="/login"
+              className="text-indigo-400 hover:text-indigo-300 font-medium transition"
+            >
+              Login
+            </Link>
+          </div>
+
         </form>
       </div>
     </div>
