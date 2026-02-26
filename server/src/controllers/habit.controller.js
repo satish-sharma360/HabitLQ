@@ -1,7 +1,7 @@
-import habitModel from "../model/habit.model";
-import habitLogModel from "../model/habitLog.model";
+import habitModel from "../model/habit.model.js";
+import habitLogModel from "../model/habitLog.model.js";
 import { addXP, checkBadges, checkStreakBonus } from "../service/gamification.service.js";
-import AppError from "../utils/AppError";
+import AppError from "../utils/AppError.js";
 import catchAsync from "../utils/catchAsync.js"
 
 const createhabit = catchAsync(async (req, res, next) => {

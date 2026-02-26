@@ -1,7 +1,7 @@
 import aichatModel from "../model/aichat.model.js";
 import habitModel from "../model/habit.model.js";
 import habitLogModel from "../model/habitLog.model.js";
-import { askCoach } from "../service/ai.service";
+import { askCoach } from "../service/ai.service.js";
 import catchAsync from "../utils/catchAsync.js"
 
 const askAI = catchAsync(async (req, res, next) => {

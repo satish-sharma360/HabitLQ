@@ -20,4 +20,4 @@ const aiChatSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("AIChat", aiChatSchema);
+export default mongoose.model("AIChat", aiChatSchema);

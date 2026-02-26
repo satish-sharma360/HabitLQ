@@ -1,5 +1,4 @@
 import AppError from "../utils/AppError.js";
-
 import userModel from "../model/user.model.js";
 import postModel from "../model/post.model.js";
 

@@ -1,12 +1,14 @@
-const userModel = require("../model/user.model");
-const { HashPassword, ComparePassword } = require("../service/password.service");
-const { GenerateToken } = require("../service/token.service");
-const { createUser } = require("../service/User.service");
-const { default: AppError } = require("../utils/AppError");
-const { default: catchAsync } = require("../utils/catchAsync");
+import userModel from "../model/user.model.js";
+import {HashPassword, ComparePassword} from "../service/password.service.js";
+import {GenerateToken}  from "../service/token.service.js"
+import {createUser}  from "../service/User.service.js";
+import AppError  from "../utils/AppError.js";
+import catchAsync from "../utils/catchAsync.js";
+import badgeModel from "../model/badge.model.js";
 
 const RegisterUser = catchAsync(async (req, res, next) => {
     const { name, email, password, conformPassword } = req.body
+    console.log(req.body)
 
     if (!name || !email || !password) {
         return next(new AppError("All fields are required", 400));
@@ -17,12 +19,14 @@ const RegisterUser = catchAsync(async (req, res, next) => {
     }
 
     const existing = await userModel.findOne({ email });
+    console.log("running")
 
     if (existing) {
         return next(new AppError("User already registered", 400))
     }
 
     const hashPassword = await HashPassword(password);
+    console.log(hashPassword)
 
     const user = await createUser({
         name, email, password: hashPassword
@@ -82,8 +86,12 @@ const logOut = (req, res) => {
     })
 }
 
-const getMe = catchAsync(async (next, req, res) => {
+const getMe = catchAsync(async (req, res ,next) => {
     const user = await userModel.findById(req.user._id).populate("badges");
+
+    if (!user) {
+        return next(new AppError("User not found", 404));
+    }
 
     res.status(200).json({
         status: "success",
@@ -92,7 +100,7 @@ const getMe = catchAsync(async (next, req, res) => {
 })
 
 const updateProfile = catchAsync(async (req, res, next) => {
-    const id = req.user._id;
+    const id = req.user._id.toString();
 
     if (!id) {
         return next(new AppError("Id is required", 400));
@@ -102,7 +110,7 @@ const updateProfile = catchAsync(async (req, res, next) => {
     if (req.body.name) filterBody.name = req.body.name;
     if (req.body.email) filterBody.email = req.body.email;
 
-    const updatedUser = await userModel.findByIdAndUpdate(id, { $set: filterBody }, { new: true, runValidators: true })
+    const updatedUser = await userModel.findByIdAndUpdate(id, { $set: filterBody }, { returnDocument: 'after', runValidators: true })
 
     if (!updatedUser) {
         return next(new AppError("No user found with that ID", 404));

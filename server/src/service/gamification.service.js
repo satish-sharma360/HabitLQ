@@ -1,6 +1,6 @@
 import XP_RULES from "../config/xp_rule.js";
-import badgeModel from "../model/badge.model";
-import postModel from "../model/post.model";
+import badgeModel from "../model/badge.model.js";
+import postModel from "../model/post.model.js";
 import userModel from "../model/user.model.js"
 
 const addXP = async (userId, xpAmount) => {

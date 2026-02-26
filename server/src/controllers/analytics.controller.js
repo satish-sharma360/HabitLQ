@@ -1,4 +1,4 @@
-import habitLogModel from "../model/habitLog.model";
+import habitLogModel from "../model/habitLog.model.js";
 import catchAsync from "../utils/catchAsync.js"
 
 // Weekly Analytics

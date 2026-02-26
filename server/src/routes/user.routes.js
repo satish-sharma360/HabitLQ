@@ -7,7 +7,7 @@ const router = Router()
 router.post('/register' , RegisterUser)
 router.post('/login' , loginUser)
 router.post('/logout' , logOut)
-router.post('/profile', Protected , getMe)
-router.post('/update-profile' , updateProfile)
+router.get('/profile', Protected , getMe)
+router.post('/update-profile' ,Protected ,updateProfile)
 
 export default router

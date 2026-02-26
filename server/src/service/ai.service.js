@@ -1,5 +1,5 @@
 import OpenAI from 'openai'
-import aichatModel from '../model/aichat.model';
+import aichatModel from '../model/aichat.model.js';
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
