@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../context/auth";
 
 const Sidebar = () => {
-  const { user, logout } = useContext(AuthContext);
+  const { user, logOut } = useContext(AuthContext);
   const [collapsed, setCollapsed] = useState(false);
 
   const navItems = [
@@ -66,7 +66,7 @@ const Sidebar = () => {
 
       {/* Logout */}
       <button
-        onClick={logout}
+        onClick={logOut}
         className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-red-600/20 text-red-400 text-sm"
       >
         <span className="text-lg">🚪</span>

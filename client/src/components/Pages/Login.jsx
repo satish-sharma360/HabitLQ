@@ -2,9 +2,14 @@ import React from "react";
 import Button from "../core/Button";
 import { useState } from "react";
 import Input from "../core/Input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../../context/auth";
 
 const Login = () => {
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -17,7 +22,18 @@ const Login = () => {
     }));
   };
 
-  const SubmitFormData = () => {};
+  const SubmitFormData = async (e) => {
+    e.preventDefault();
+    try {
+        const result = await login(formData);
+        if(result.status === "success"){
+            console.log("User data Loaded",result);
+            navigate('/dashboard')
+        }
+    } catch (error) {
+        alert("Invalid Credentials")
+    }
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-black text-white px-4">
       {/* Background Glow */}

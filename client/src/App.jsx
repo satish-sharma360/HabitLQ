@@ -13,18 +13,18 @@ import AiCoach from "./components/Pages/AiCoach";
 import Feed from "./components/Pages/Feed";
 import Profile from "./components/Pages/Profile";
 import AdminPanel from "./components/Pages/AdminPanel";
+import Protected from "./routes/Protected";
 
 const App = () => {
   return (
     <Routes>
+      {/* 🌍 Public */}
       <Route path="/" element={<Landing />} />
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
 
-        {/* 🌍 Public */}
-        <Route path="/" element={<Landing />} />
-
-        {/* 🔐 Protected */}
+      {/* 🔐 Protected */}
+      <Route element={<Protected />}>
         <Route path="/dashboard" element={<AppLayout />}>
           <Route index element={<Dashboard />} />
         </Route>
@@ -56,6 +56,7 @@ const App = () => {
         <Route path="/admin" element={<AppLayout />}>
           <Route index element={<AdminPanel />} />
         </Route>
+      </Route>
     </Routes>
   );
 };
