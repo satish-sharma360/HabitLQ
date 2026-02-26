@@ -4,9 +4,10 @@ import Input from "../core/Input";
 import { useContext } from "react";
 import { AuthContext } from "../../context/auth";
 import Button from "../core/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
   const { register } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     name: "",
@@ -27,8 +28,9 @@ const Register = () => {
 
     const result = await register(formData);
 
-    if (result.data.success) {
-      console.log("object");
+    if (result?.status === "success") {
+      console.log("Registration Successful");
+      navigate("/dashboard");
     }
   };
 
@@ -92,7 +94,6 @@ const Register = () => {
               Login
             </Link>
           </div>
-
         </form>
       </div>
     </div>
