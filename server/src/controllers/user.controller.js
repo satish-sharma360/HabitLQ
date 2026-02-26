@@ -8,7 +8,6 @@ import badgeModel from "../model/badge.model.js";
 
 const RegisterUser = catchAsync(async (req, res, next) => {
     const { name, email, password, conformPassword } = req.body
-    console.log(req.body)
 
     if (!name || !email || !password) {
         return next(new AppError("All fields are required", 400));
@@ -19,14 +18,12 @@ const RegisterUser = catchAsync(async (req, res, next) => {
     }
 
     const existing = await userModel.findOne({ email });
-    console.log("running")
 
     if (existing) {
         return next(new AppError("User already registered", 400))
     }
 
     const hashPassword = await HashPassword(password);
-    console.log(hashPassword)
 
     const user = await createUser({
         name, email, password: hashPassword
@@ -40,15 +37,7 @@ const RegisterUser = catchAsync(async (req, res, next) => {
     res.status(201).json({
         status: "success",
         token,
-        data: {
-            user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                level: user.level,
-                xp: user.xp,
-            },
-        },
+        user,
     });
 })
 

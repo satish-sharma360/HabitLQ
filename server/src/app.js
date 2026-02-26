@@ -12,7 +12,10 @@ const app = express()
 const PORT = process.env.PORT || 7777
 
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+    origin:process.env.FRONT_END_URL,
+    credentials:true
+}))
 
 app.get('/',(req,res)=>{
     res.send('Server is up...🚀')
