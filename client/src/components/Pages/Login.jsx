@@ -26,12 +26,13 @@ const Login = () => {
     e.preventDefault();
     try {
         const result = await login(formData);
+        console.log("Result from Login",result)
         if(result.status === "success"){
             console.log("User data Loaded",result);
             navigate('/dashboard')
         }
     } catch (error) {
-        alert("Invalid Credentials")
+        alert("Invalid Credentials",error)
     }
   };
   return (

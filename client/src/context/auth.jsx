@@ -36,7 +36,7 @@ const AuthProvider = ({ children }) => {
       if (token) {
         localStorage.setItem("token", token);
         axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`
-        await getMe(token);
+        await getMe();
         return res.data;
       }
     } catch (error) {
@@ -48,16 +48,16 @@ const AuthProvider = ({ children }) => {
   const login = async (data) => {
     try {
       const res = await axiosInstance.post("/auth/login", data);
-
+      console.log(res)
       if (res.data.token) {
         localStorage.setItem("token", res.data.token);
-        axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
         await getMe(res.data.token);
         return res.data;
       }
     } catch (error) {
       console.error("Login Error:", error.response?.data?.message);
-      throw error;
+      console.log(error);
     }
   };
 
