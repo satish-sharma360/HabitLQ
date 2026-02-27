@@ -117,34 +117,29 @@ const completeHabit = catchAsync(async (req, res, next) => {
 
     if (habit.repeatDays && habit.repeatDays.length > 0) {
         if (!habit.repeatDays.includes(todayDay)) {
-            return next(new AppError(`This habit is not scheduled for ${todayDay}`, 400));
+            res.status(400).json({ message: `This habit is not scheduled for ${todayDay}` });
         }
     }
 
     // ✅ 2. Check time window if reminderTime is set (e.g "07:00")
-   if (habit.reminderTime) {
-    const [reminderHour, reminderMinute] = habit.reminderTime.split(":").map(Number);
+    if (habit.reminderTime) {
+        const [reminderHour, reminderMinute] = habit.reminderTime.split(":").map(Number);
 
-    const windowStart = new Date();
-    windowStart.setUTCHours(reminderHour, reminderMinute, 0, 0);
+        const windowStart = new Date();
+        windowStart.setUTCHours(reminderHour, reminderMinute, 0, 0);
 
-    const windowEnd = new Date();  
-    windowEnd.setUTCHours(reminderHour, reminderMinute, 0, 0);
-    windowEnd.setTime(windowEnd.getTime() + 30 * 60 * 1000); // +30 mins
+        const windowEnd = new Date();
+        windowEnd.setUTCHours(reminderHour, reminderMinute, 0, 0);
+        windowEnd.setTime(windowEnd.getTime() + 30 * 60 * 1000); // +30 mins
 
-    const endHour = String(windowEnd.getHours()).padStart(2, "0");
-    const endMinute = String(windowEnd.getMinutes()).padStart(2, "0");
+        const endHour = String(windowEnd.getHours()).padStart(2, "0");
+        const endMinute = String(windowEnd.getMinutes()).padStart(2, "0");
 
 
-    if (now < windowStart || now > windowEnd) {
-        return next(
-            new AppError(
-                `Habit can only be completed between ${habit.reminderTime} and ${endHour}:${endMinute}`,
-                400
-            )
-        );
+        if (now < windowStart || now > windowEnd) {
+            res.status(400).json({ message: `Habit can only be completed between ${habit.reminderTime} and ${endHour}:${endMinute}` });
+        }
     }
-}
 
     // ✅ 3. Check if already completed today
     const today = new Date();
