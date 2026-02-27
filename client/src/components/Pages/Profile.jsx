@@ -2,8 +2,11 @@ import axios from "axios";
 import React from "react";
 import { useState } from "react";
 import axiosInstance from "../../api/axios";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
+  const navigate = useNavigate()
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -20,6 +23,8 @@ const Profile = () => {
     e.preventDefault();
     try {
       const res = await axiosInstance.post("/auth/update-profile", formData);
+      alert("Updated Profile data")
+      navigate('/dashboard')
     } catch (error) {
       alert("Error in Update Profile");
       console.log("Error in Profile", error);

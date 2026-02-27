@@ -1,5 +1,6 @@
 import habitModel from "../model/habit.model.js";
 import habitLogModel from "../model/habitLog.model.js";
+import userModel from "../model/user.model.js";
 import { addXP, checkBadges, checkStreakBonus } from "../service/gamification.service.js";
 import AppError from "../utils/AppError.js";
 import catchAsync from "../utils/catchAsync.js"
@@ -56,10 +57,22 @@ const getsingleHabit = catchAsync(async (req, res, next) => {
 })
 
 const updateHabit = catchAsync(async (req, res, next) => {
+    const habitId = req.params.id;
+    const userId = req.user._id;
+
+
+    if (!await userModel.findById(userId)) {
+        return next(new AppError("User not found", 404));
+    }
+
+    if (!await habitModel.findById(habitId)) {
+        return next(new AppError("Habit not found", 404));
+    }
+
     const habit = await habitModel.findOneAndUpdate(
-        { _id: req.params.id, userId: req.user._id },
+        { _id: habitId, userId: userId },
         req.body,
-        { new: true, runValidators: true }
+        { returnDocument: 'after', runValidators: true }
     )
 
     if (!habit) {
@@ -95,8 +108,47 @@ const completeHabit = catchAsync(async (req, res, next) => {
         return next(new AppError("Habit not found", 404));
     }
 
+
+    const now = new Date();
+
+    // ✅ 1. Check if today is an allowed repeat day
+    const dayMap = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    const todayDay = dayMap[now.getDay()]
+
+    if (habit.repeatDays && habit.repeatDays.length > 0) {
+        if (!habit.repeatDays.includes(todayDay)) {
+            return next(new AppError(`This habit is not scheduled for ${todayDay}`, 400));
+        }
+    }
+
+    // ✅ 2. Check time window if reminderTime is set (e.g "07:00")
+   if (habit.reminderTime) {
+    const [reminderHour, reminderMinute] = habit.reminderTime.split(":").map(Number);
+
+    const windowStart = new Date();
+    windowStart.setUTCHours(reminderHour, reminderMinute, 0, 0);
+
+    const windowEnd = new Date();  
+    windowEnd.setUTCHours(reminderHour, reminderMinute, 0, 0);
+    windowEnd.setTime(windowEnd.getTime() + 30 * 60 * 1000); // +30 mins
+
+    const endHour = String(windowEnd.getHours()).padStart(2, "0");
+    const endMinute = String(windowEnd.getMinutes()).padStart(2, "0");
+
+
+    if (now < windowStart || now > windowEnd) {
+        return next(
+            new AppError(
+                `Habit can only be completed between ${habit.reminderTime} and ${endHour}:${endMinute}`,
+                400
+            )
+        );
+    }
+}
+
+    // ✅ 3. Check if already completed today
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    today.setUTCHours(0, 0, 0, 0);
 
     const existingLog = await habitLogModel.findOne({
         habitId: habit._id,
@@ -127,8 +179,8 @@ const completeHabit = catchAsync(async (req, res, next) => {
 
     await addXP(req.user._id, 10);
     await checkStreakBonus(req.user_id, habit.currentStreak)
-    await checkBadges(req.user._id , habit.currentStreak)
-    
+    await checkBadges(req.user._id, habit.currentStreak)
+
     res.status(200).json({
         status: "success",
         message: "Habit completed",
@@ -142,6 +194,7 @@ const missHabit = catchAsync(async (req, res, next) => {
         _id: req.params.habitId,
         userId: req.user._id,
     })
+
 
     if (!habit) {
         return next(new AppError("Habit not found", 404));
@@ -157,10 +210,16 @@ const missHabit = catchAsync(async (req, res, next) => {
 })
 
 const getHabitLogs = catchAsync(async (req, res, next) => {
+
+    const allLogs = await habitLogModel.find({ habitId: req.params.id });
+    console.log("allLogs without userId filter:", allLogs);
+
     const logs = await habitLogModel.find({
-        habitId: req.params._id,
+        habitId: req.params.habitId,
         userId: req.user._id
-    }).sort({ date: -1 })
+    }).sort({ date: -1 });
+
+    console.log("logs:", logs);
 
     res.status(200).json({
         status: "success",

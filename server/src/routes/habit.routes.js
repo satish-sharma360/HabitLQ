@@ -1,10 +1,11 @@
 import { Router } from 'express'
 import Protected from '../middleware/auth.middleware.js'
 import { completeHabit, createhabit, deleteHabit, getHabitLogs, getHabits, getsingleHabit, missHabit, updateHabit } from '../controllers/habit.controller.js'
+import autoMissMiddleware from '../middleware/autoMiss.middleware.js'
 
 const router = Router()
 
-router.use(Protected)
+router.use(Protected , autoMissMiddleware)
 
 router.post('/', createhabit)
 router.get('/', getHabits)
@@ -13,9 +14,9 @@ router.patch('/:id', updateHabit)
 router.delete('/:id', deleteHabit)
 
 
-router.delete('/:habbitId/completed', completeHabit)
-router.delete('/:habbitId/miss', missHabit)
-router.delete('/:habbitId/logs', getHabitLogs)
+router.post('/:habbitId/completed', completeHabit)
+router.post('/:habitId/miss', missHabit)
+router.get('/:habitId/logs', getHabitLogs)
 
 
 export default router

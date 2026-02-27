@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const habitSchema = new mongoose.Schema(
   {
@@ -43,7 +43,5 @@ const habitSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-habitSchema.index({ userId: 1 });
 
 export default mongoose.model("Habit", habitSchema);
