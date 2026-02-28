@@ -33,7 +33,6 @@ const CreateHabit = ({ switchToggle }) => {
     e.preventDefault()
     try {
         const res = await axiosInstance.post(`/habit`,formData)
-        console.log("Create Form",res)
         switchToggle()
     } catch (error) {
         alert("Error creating Habit")

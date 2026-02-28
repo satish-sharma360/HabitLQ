@@ -7,6 +7,6 @@ const router = Router()
 router.use(Protected)
 
 router.post('/ask' , askAI)
-router.post('/history' , getAIHistory)
+router.get('/history' , getAIHistory)
 
 export default router;

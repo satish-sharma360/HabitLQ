@@ -33,7 +33,7 @@ const getAllBadges = catchAsync(async (req, res, next) => {
 
     const formatted = badges.map((b) => ({
         ...b.toObject(),
-        unlocked: user.badges.includes(b._id)
+        unlocked: user.badges.some((userBadgeId) => userBadgeId.toString() === b._id.toString()),
     }))
 
     res.status(200).json({

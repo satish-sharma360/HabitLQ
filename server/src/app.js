@@ -5,6 +5,10 @@ import connectToDb from "./config/database.js";
 
 import UserRoute from "./routes/user.routes.js"
 import habitRoute from "./routes/habit.routes.js"
+import gamificationRoute from "./routes/gamification.routes.js"
+import analysisRouter from "./routes/analycs.routes.js"
+import aiRouter from "./routes/ai.routes.js"
+import postRouter from "./routes/post.routes.js"
 
 dotenv.config()
 
@@ -24,6 +28,10 @@ app.get('/',(req,res)=>{
 
 app.use('/api/auth' , UserRoute)
 app.use('/api/habit' , habitRoute)
+app.use('/api/gamification' , gamificationRoute)
+app.use("/api/analysis", analysisRouter);
+app.use("/api/ai", aiRouter);
+app.use("/api/post", postRouter);
 
 connectToDb().then(() => {
     console.log("Database connection established...")
